@@ -11,8 +11,8 @@ public class History {
         this(Tensors.empty());
     }
 
-    public History(Tensor history) {
-        this.moves = history;
+    public History(Tensor moves) {
+        this.moves = moves;
     }
 
     public Tensor getAllMoves() {

@@ -32,7 +32,7 @@ public class Game {
             rewardHistory.append(reward);
             System.out.println("Round " + i + 1);
             System.out.println("Player A plays: " + a + " and Player B: " + b);
-            System.out.println("Payoff is: " + reward.toString());
+            System.out.println("Reward is: " + reward.toString());
             history.addMove(move);
         }
         System.out.println("The move history is:");
