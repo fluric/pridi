@@ -1,32 +1,34 @@
 package prisonerdilemma;
 
-import java.util.Arrays;
+import java.util.List;
 
-import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.alg.Dimensions;
-import ch.ethz.idsc.tensor.sca.Clip;
-import ch.ethz.idsc.tensor.sca.Clips;
+import core.Move;
 import core.Rule;
 
 /** https://en.wikipedia.org/wiki/Prisoner%27s_dilemma */
 public class PrisonersDilemmaRule implements Rule {
-    private static final Tensor RULE = Tensors.of(Tensors.of(Tensors.vector(-1, -1), Tensors.vector(-3, 0)), Tensors.of(Tensors.vector(0, -3), Tensors.vector(-2, -2)));
-    private static final Clip CLIP = Clips.interval(0, 2);
-
     @Override
-    public boolean isValid(Tensor move) {
-        return Dimensions.of(move).equals(Arrays.asList(2)) && move.stream().map(Scalar.class::cast).allMatch(i -> CLIP.isInside(i));
+    public Integer[] evaluateRound(Move[] round) {
+        if (round[0] == MovePD.SILENT && round[1] == MovePD.SILENT)
+            return new Integer[] { -1, -1 };
+        else if (round[0] == MovePD.SILENT && round[1] == MovePD.BETRAYAL)
+            return new Integer[] { -3, 0 };
+        else if (round[0] == MovePD.BETRAYAL && round[1] == MovePD.SILENT)
+            return new Integer[] { 0, -3 };
+        else
+            return new Integer[] { -2, -2 };
     }
 
     @Override
-    public Tensor evaluate(Tensor move) {
-        return RULE.get(move.Get(0).number().intValue(), move.Get(1).number().intValue());
+    public Integer[] evaluateRounds(List<Move[]> rounds) {
+        Integer[] totalReward = new Integer[] { 0, 0 };
+        Integer[] reward;
+        for (Move[] round : rounds) {
+            reward = evaluateRound(round);
+            totalReward[0] += reward[0];
+            totalReward[1] += reward[1];
+        }
+        return totalReward;
     }
 
-    @Override
-    public Tensor evaluateMoves(Tensor moves) {
-        return moves.stream().map(i -> evaluate(i)).reduce(Tensor::add).get();
-    }
 }

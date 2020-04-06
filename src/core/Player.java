@@ -1,5 +1,13 @@
 package core;
 
-public interface Player {
-    int move(History history, int position);
+public abstract class Player {
+    public Strategy strategy;
+    public PlayerPosition position;
+
+    public Player(Strategy strategy, PlayerPosition position) {
+        this.strategy = strategy;
+        this.position = position;
+    }
+
+    public abstract Move move(History history);
 }
