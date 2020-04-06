@@ -21,6 +21,12 @@ public enum StrategiesPD {
         public Strategy create() {
             return new ResentfulStrategyPD();
         }
+    },
+    TIT4TAT_PD {
+        @Override
+        public Strategy create() {
+            return new Tit4tatStrategyPD();
+        }
 
     };
     public abstract Strategy create();
