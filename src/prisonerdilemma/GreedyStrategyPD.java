@@ -6,7 +6,7 @@ import core.PlayerPosition;
 import core.Strategy;
 
 /** This strategy always chooses the selfish way to betray the opponent */
-public class GreedyStrategyPD implements Strategy {
+class GreedyStrategyPD implements Strategy {
 
     @Override
     public Move move(History history, PlayerPosition position) {

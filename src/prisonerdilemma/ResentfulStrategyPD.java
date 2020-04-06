@@ -6,7 +6,7 @@ import core.PlayerPosition;
 import core.Strategy;
 
 /** This strategy is cooperative as long as the opponent is too. Once the opponent betrayed, it is betrayed as well */
-public class ResentfulStrategyPD implements Strategy {
+class ResentfulStrategyPD implements Strategy {
 
     @Override
     public Move move(History history, PlayerPosition position) {
