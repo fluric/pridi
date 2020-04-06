@@ -1,11 +1,11 @@
 package core;
 
-import ch.ethz.idsc.tensor.Tensor;
+import java.util.List;
 
+/** The rule interface generally defines the payoff for the players. The array position is defined by the {@link PlayerPosition} interface */
 public interface Rule {
-    boolean isValid(Tensor move);
 
-    Tensor evaluate(Tensor move);
+    Integer[] evaluateRound(Move[] round);
 
-    Tensor evaluateMoves(Tensor moves);
+    Integer[] evaluateRounds(List<Move[]> rounds);
 }

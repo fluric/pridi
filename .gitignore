@@ -13,3 +13,6 @@ buildNumber.properties
 .settings/
 .project
 .classpath
+
+# playground
+src/playground.java
