@@ -5,7 +5,7 @@ import core.Move;
 import core.PlayerPosition;
 import core.Strategy;
 
-/** This strategy is cooperative as long as the opponent is too. Once the opponent betrayed, it is betrayed as well */
+/** This strategy will do the turn which the oppononent has done before starting with not betraying */
 class Tit4tatStrategyPD implements Strategy {
 
     @Override
@@ -15,10 +15,7 @@ class Tit4tatStrategyPD implements Strategy {
         }
         else {
         	PlayerPositionPD opPos = position == PlayerPositionPD.PLAYER_A ? PlayerPositionPD.PLAYER_B : PlayerPositionPD.PLAYER_A;
-            System.out.println("played rounds:");
-            System.out.println(history.getPlayedRounds());
-            //MovePD[] opMove=history.getRound(history.getPlayedRounds());
-            //return opMove[opPos.index()];
+
             return history.getRound(history.getPlayedRounds()-1)[opPos.index()];
     	}
     }
