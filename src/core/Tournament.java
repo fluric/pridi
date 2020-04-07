@@ -71,6 +71,7 @@ public enum Tournament {
 			}
 			resultReward[j]=sum/(averageReward.length-1);
 			System.out.println("Player " + j + " has a total average of " + resultReward[j]);
+			sum=0;
 		}
 
 		int winnerPosition=getWinnerPosition(resultReward);
