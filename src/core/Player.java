@@ -1,8 +1,8 @@
 package core;
 
 public abstract class Player {
-    public Strategy strategy;
-    public PlayerPosition position;
+    protected Strategy strategy;
+    protected PlayerPosition position;
 
     public Player(Strategy strategy) {
         this.strategy = strategy;
