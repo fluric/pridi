@@ -7,14 +7,9 @@ import core.Strategy;
 
 public class PlayerPD extends Player {
 
-    public PlayerPD(Strategy strategy) {
-        super(strategy);
-    }
-
     public PlayerPD(Strategy strategy, PlayerPositionPD position) {
         super(strategy, position);
     }
-
 
     @Override
     public Move move(History history) {

@@ -1,7 +1,13 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import prisonerdilemma.GamePD;
 import prisonerdilemma.PlayerPD;
 import prisonerdilemma.PlayerPositionPD;
 import prisonerdilemma.PrisonersDilemmaRule;
@@ -9,87 +15,59 @@ import prisonerdilemma.StrategiesPD;
 
 public enum Tournament {
     ;
+    public static Map<Strategy, Integer> strategyMap;
+    public static List<Game> gameList;
+    public static int rounds = 10;
 
     // TODO The tournament should be more generalized and automated
     public static void main(String[] args) {
-       	List<Player> players = new ArrayList<Player>();
-        players.add(new PlayerPD(StrategiesPD.TIT4TAT_PD.create()));
-        players.add(new PlayerPD(StrategiesPD.GREEDY_PD.create()));
-        players.add(new PlayerPD(StrategiesPD.FRIENDLY_PD.create()));
-        players.add(new PlayerPD(StrategiesPD.RESENTFUL_PD.create()));
-        double[][] averageReward = new double[players.size()][players.size()-1]; 
-        runTournament(players, averageReward,0, 1);
-        evaluateTournament(averageReward);
-   	}
+        loadStrategies();
+        createGames();
+        runTournament();
+    }
 
-   	public static void runTournament(List<Player> players,double[][] averageReward, int iteration,int nrGame){
-   		
-   		if(players.size()>2){
-	   		for (int i = 1; i < players.size(); i++){
-	        	Game game = new Game(new PlayerPD(players.get(0).getStrategy(), PlayerPositionPD.PLAYER_A), 
-	        						new PlayerPD(players.get(i).getStrategy(), PlayerPositionPD.PLAYER_B),
-	        						 new PrisonersDilemmaRule(), 10);       	
-	        	System.out.println("Game " + (nrGame));
-	        	nrGame++;
-	        	game.run();
-	        	averageReward[iteration][iteration+i-1]=game.getAverageRewardPlayerA();
-	        	averageReward[iteration+i ][iteration]=game.getAverageRewardPlayerB();
+    public static void loadStrategies() {
+        strategyMap = new HashMap<Strategy, Integer>();
+        strategyMap.put(StrategiesPD.TIT4TAT_PD.create(), 0);
+        strategyMap.put(StrategiesPD.GREEDY_PD.create(), 0);
+        strategyMap.put(StrategiesPD.FRIENDLY_PD.create(), 0);
+        strategyMap.put(StrategiesPD.RESENTFUL_PD.create(), 0);
+    }
 
-	   		}
-       		
-       		players.remove(0);
-       		iteration++;
-	       	runTournament(players, averageReward, iteration, nrGame);
-	       	
+    public static void createGames() {
+        GamePD game;
+        PlayerPD playerA;
+        PlayerPD playerB;
+        gameList = new ArrayList<Game>();
 
-   		}
-   		else if(players.size()>1){
-   			
-        	Game game = new Game(new PlayerPD(players.get(0).getStrategy(), PlayerPositionPD.PLAYER_A), 
-        						new PlayerPD(players.get(1).getStrategy(), PlayerPositionPD.PLAYER_B),
-        						 new PrisonersDilemmaRule(), 10);       	
-        	System.out.println("Game " + (nrGame));
-        	nrGame++;
-        	game.run();	
-        	averageReward[iteration][iteration]=game.getAverageRewardPlayerA();
-	        averageReward[iteration+1 ][iteration]=game.getAverageRewardPlayerB();
+        for (Strategy strategyA : strategyMap.keySet()) {
+            playerA = new PlayerPD(strategyA, PlayerPositionPD.PLAYER_A);
+            for (Strategy strategyB : strategyMap.keySet()) {
+                playerB = new PlayerPD(strategyB, PlayerPositionPD.PLAYER_B);
+                game = new GamePD(Arrays.asList(playerA, playerB), new PrisonersDilemmaRule(), rounds, false);
+                gameList.add(game);
+            }
+        }
 
+    }
 
-	   		
+    public static void runTournament() {
+        Strategy strategyA;
+        Strategy strategyB;
+        for (Game game : gameList) {
+            game.run();
+            strategyA = game.playerList.get(0).getStrategy();
+            strategyB = game.playerList.get(1).getStrategy();
+            strategyMap.replace(strategyA, strategyMap.get(strategyA) + game.getScore()[0]);
+            strategyMap.replace(strategyB, strategyMap.get(strategyB) + game.getScore()[1]);
 
-   		}
-   	}
+            System.out.println("Score between " + strategyA.getClass().getSimpleName() + " and " + strategyB.getClass().getSimpleName() + ":");
+            System.out.println(Arrays.asList(game.history.getScore()));
+        }
+        for (Entry<Strategy, Integer> entry : strategyMap.entrySet()) {
+            System.out.println(entry.getKey().getClass().getSimpleName() + " total score: " + entry.getValue() + " and average of "
+                    + (double) entry.getValue() / rounds / strategyMap.size() / 2 + " per round");
+        }
 
-	public static void evaluateTournament(double[][] averageReward){
-		
-		double[] resultReward = new double[averageReward.length];
-		double sum=0;
-		for (int j = 0; j < averageReward.length; j++){
-
-			for (int i = 0; i < averageReward.length-1; i++){
-				sum+=averageReward[j][i];
-			}
-			resultReward[j]=sum/(averageReward.length-1);
-			System.out.println("Player " + j + " has a total average of " + resultReward[j]);
-			sum=0;
-		}
-
-		int winnerPosition=getWinnerPosition(resultReward);
-
-		System.out.println("PLAYER " + winnerPosition + " IS THE WINNER!!! He has a total average of " + resultReward[winnerPosition]);
-
-	}
-
-	public static int getWinnerPosition(double[] resultReward){
-		int largest = 0;
-		for ( int i = 1; i < resultReward.length; i++ )
-		{
-		    if ( resultReward[i] > resultReward[largest] ){
-		    	largest = i;
-		    }
-		}
-		return largest;	
-	}
-
-
+    }
 }

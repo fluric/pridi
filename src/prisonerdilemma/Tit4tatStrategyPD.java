@@ -5,7 +5,7 @@ import core.Move;
 import core.PlayerPosition;
 import core.Strategy;
 
-/** This strategy will do the turn which the opponent has done before. It starting with not betraying */
+/** This strategy will do the turn which the opponent has done before. It is starting with not betraying. */
 class Tit4tatStrategyPD implements Strategy {
 
     @Override
