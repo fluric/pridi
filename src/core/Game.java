@@ -9,6 +9,8 @@ public class Game {
     private final Rule rule;
     private final List<Integer[]> rewardHistory = new ArrayList<>();
     private final int rounds;
+    private double averageRewardPlayerA;
+    private double averageRewardPlayerB;
     // ---
     private final History history = new History();
 
@@ -18,6 +20,13 @@ public class Game {
         this.playerB = playerB;
         this.rule = rule;
         this.rounds = rounds;
+    }
+
+    public double getAverageRewardPlayerA(){
+        return averageRewardPlayerA;
+    }
+    public double getAverageRewardPlayerB(){
+        return averageRewardPlayerB;
     }
 
     // TODO This function should be generalized, i.e. it should return the total reward for {@link Tournament}
@@ -47,5 +56,9 @@ public class Game {
         Integer[] totalRewards = rule.evaluateRounds(history.getAllRounds());
         System.out.printf("{%s,%s}%n", totalRewards[0], totalRewards[1]);
 
+        this.averageRewardPlayerA=((double) totalRewards[0])/this.rounds;
+        this.averageRewardPlayerB=((double) totalRewards[1])/this.rounds;
+        System.out.println("Average reward is:");
+        System.out.printf("{%s,%s}%n", this.averageRewardPlayerA, this.averageRewardPlayerB);
     }
 }
